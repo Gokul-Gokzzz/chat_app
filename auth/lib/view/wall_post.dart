@@ -96,21 +96,6 @@ class _WallPostState extends State<WallPost> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Column(
-          //   children: [
-          //     LikeButton(
-          //       isLiked: isLiked,
-          //       onTap: toogleLike,
-          //     ),
-          //     SizedBox(
-          //       height: 5,
-          //     ),
-          //     Text(
-          //       widget.likes.length.toString(),
-          //       style: TextStyle(color: Colors.grey),
-          //     ),
-          //   ],
-          // ),
           SizedBox(
             width: 20,
           ),
@@ -162,21 +147,6 @@ class _WallPostState extends State<WallPost> {
               ),
             ],
           )
-          // Column(
-          //   children: [
-          //     LikeButton(
-          //       isLiked: isLiked,
-          //       onTap: toogleLike,
-          //     ),
-          //     SizedBox(
-          //       height: 5,
-          //     ),
-          //     Text(
-          //       widget.likes.length.toString(),
-          //       style: TextStyle(color: Colors.grey),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );
