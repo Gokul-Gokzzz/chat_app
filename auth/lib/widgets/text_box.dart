@@ -4,11 +4,12 @@ import 'package:flutter/widgets.dart';
 class MyTextBox extends StatelessWidget {
   final String text;
   final String sectionName;
-  const MyTextBox({
-    super.key,
-    required this.text,
-    required this.sectionName,
-  });
+  final void Function()? onPressed;
+  const MyTextBox(
+      {super.key,
+      required this.text,
+      required this.sectionName,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class MyTextBox extends StatelessWidget {
                 style: TextStyle(color: Colors.grey[500]),
               ),
               IconButton(
-                  onPressed: () {},
+                  onPressed: onPressed,
                   icon: Icon(
                     Icons.settings,
                     color: Colors.grey[400],

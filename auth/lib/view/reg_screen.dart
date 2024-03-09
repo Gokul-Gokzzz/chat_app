@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:auth/service/google_sign_in.dart';
 import 'package:auth/widgets/button.dart';
 import 'package:auth/widgets/square_button.dart';
 import 'package:auth/widgets/text_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -28,20 +31,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       },
     );
+    if (passwordController.text != confirmPasswordController.text) {
+      Navigator.pop(context);
+      showErrorMessage('Password does ot match');
+      return;
+    }
 
     try {
-      if (passwordController.text == confirmPasswordController.text) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-      } else {
-        showErrorMessage("Password don't match!");
-      }
-      Navigator.pop(context);
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      FirebaseFirestore.instance
+          .collection("Users")
+          .doc(userCredential.user!.email)
+          .set({
+        'username': emailController.text.split('@'[0]),
+        'bio': 'Empty bio...'
+      });
+
+      if (context.mounted) Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-
+      log(e.message.toString());
       showErrorMessage(e.code);
     }
   }

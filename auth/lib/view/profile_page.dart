@@ -1,8 +1,7 @@
 import 'package:auth/widgets/text_box.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,70 +13,139 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  Future<void> editField(Stringfield) async {}
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        title: Text('Profile Page'),
+  final userCollection = FirebaseFirestore.instance.collection("Users");
+
+  Future<void> editField(String field) async {
+    String newValue = '';
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
         backgroundColor: Colors.grey[900],
-      ),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 50,
+        title: Text(
+          "Edit" + field,
+          style: TextStyle(
+            color: Colors.white,
           ),
-          Icon(
-            Icons.person,
-            size: 72,
+        ),
+        content: TextField(
+          autofocus: true,
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Enter New $field",
+            helperStyle: TextStyle(color: Colors.grey),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            currentUser.email!,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey[700],
-            ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 25),
+          onChanged: (value) {
+            newValue = value;
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
             child: Text(
-              'My Details',
+              'Cancel',
               style: TextStyle(
-                color: Colors.grey[600],
+                color: Colors.white,
               ),
             ),
           ),
-          MyTextBox(
-            text: 'gokul',
-            sectionName: 'user name',
-            onPressed: () => editField('Username'),
-          ),
-          MyTextBox(
-            text: 'empty bio',
-            sectionName: 'bio',
-            onPressed: () => editField('bio'),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 25),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(newValue),
             child: Text(
-              'my posts',
+              'Save',
               style: TextStyle(
-                color: Colors.grey[600],
+                color: Colors.white,
               ),
             ),
           ),
         ],
       ),
     );
+
+    if (newValue.trim().length > 0) {
+      await userCollection.doc(currentUser.email).update({field: newValue});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+          title: const Text('Profile Page'),
+          backgroundColor: Colors.grey[900],
+        ),
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("Users")
+              .doc(currentUser.email)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final userData = snapshot.data!.data() as Map<String, dynamic>;
+              return ListView(
+                children: [
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  const Icon(
+                    Icons.person,
+                    size: 72,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    currentUser.email!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
+                    child: Text(
+                      'My Details',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  MyTextBox(
+                    text: userData['username'].toString(),
+                    sectionName: 'user name',
+                    onPressed: () => editField('Username'),
+                  ),
+                  MyTextBox(
+                    text: userData['bio'].toString(),
+                    sectionName: 'bio',
+                    onPressed: () => editField('bio'),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
+                    child: Text(
+                      'my posts',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error${snapshot.error}'),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ));
   }
 }

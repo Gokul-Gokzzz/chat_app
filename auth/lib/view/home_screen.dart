@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Text(
-              "LOGGED IN AS: ${currentUser.email!}",
+              "LOGGED IN AS : ${currentUser.email!}",
               style: const TextStyle(color: Colors.grey),
             )
           ],
