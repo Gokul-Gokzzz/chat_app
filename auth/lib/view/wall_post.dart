@@ -1,4 +1,7 @@
+import 'package:auth/helper/helper.dart';
+import 'package:auth/widgets/comment.dart';
 import 'package:auth/widgets/comment_button.dart';
+import 'package:auth/widgets/delete_buttom.dart';
 import 'package:auth/widgets/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +11,7 @@ import 'package:flutter/material.dart';
 class WallPost extends StatefulWidget {
   final String message;
   final String user;
+  final String time;
   final String postId;
   final List<String> likes;
 
@@ -17,6 +21,7 @@ class WallPost extends StatefulWidget {
     required this.user,
     required this.postId,
     required this.likes,
+    required this.time,
   });
 
   @override
@@ -67,18 +72,70 @@ class _WallPostState extends State<WallPost> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Add Comment "),
+        title: const Text("Add Comment "),
         content: TextField(
           controller: commentController,
-          decoration: InputDecoration(hintText: "Write a comment"),
+          decoration: const InputDecoration(hintText: "Write a comment"),
         ),
         actions: [
           TextButton(
-            onPressed: () => addComment(commentController.text),
-            child: Text("Post"),
+            onPressed: () {
+              Navigator.pop(context);
+              commentController.clear();
+            },
+            child: const Text('Cancell'),
           ),
           TextButton(
-              onPressed: () => Navigator.pop(context), child: Text('Cancell'))
+            onPressed: () {
+              addComment(commentController.text);
+              Navigator.pop(context);
+              commentController.clear();
+            },
+            child: const Text("Post"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void deletePost() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Post'),
+        content: const Text(' Are you sue you want to delete this post'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final commentDocs = await FirebaseFirestore.instance
+                  .collection("User Posts")
+                  .doc(widget.postId)
+                  .collection("Comments")
+                  .get();
+
+              for (var doc in commentDocs.docs) {
+                await FirebaseFirestore.instance
+                    .collection("User Posts")
+                    .doc(widget.postId)
+                    .collection("Comments")
+                    .doc(doc.id)
+                    .delete();
+              }
+              FirebaseFirestore.instance
+                  .collection("User Posts")
+                  .doc(widget.postId)
+                  .delete()
+                  .then((value) => print('post deleted'))
+                  .catchError(
+                      (error) => print("failed to delete the post: $error"));
+              Navigator.pop(context);
+            },
+            child: const Text('Delete'),
+          ),
         ],
       ),
     );
@@ -88,29 +145,49 @@ class _WallPostState extends State<WallPost> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(8),
       ),
-      margin: EdgeInsets.only(top: 25, left: 25, right: 25),
-      padding: EdgeInsets.all(25),
+      margin: const EdgeInsets.only(top: 25, left: 25, right: 25),
+      padding: const EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 20,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                widget.user,
-                style: TextStyle(color: Colors.grey[500]),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.message),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          widget.user,
+                          style: TextStyle(color: Colors.grey[400]),
+                        ),
+                        Text(
+                          " . ",
+                          style: TextStyle(color: Colors.grey[400]),
+                        ),
+                        Text(
+                          widget.time,
+                          style: TextStyle(color: Colors.grey[400]),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(widget.message),
+              if (widget.user == currentUser.email)
+                DeleteButton(onTap: deletePost),
             ],
+          ),
+          const SizedBox(
+            width: 20,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -121,31 +198,61 @@ class _WallPostState extends State<WallPost> {
                     isLiked: isLiked,
                     onTap: toogleLike,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Text(
                     widget.likes.length.toString(),
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Column(
                 children: [
                   CommentButton(onTap: showCommentDialog),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
-                  Text(
+                  const Text(
                     '0',
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
             ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("User Post")
+                .doc(widget.postId)
+                .collection("Comments")
+                .orderBy("CommentTime", descending: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: snapshot.data!.docs.map((doc) {
+                  final commentData = doc.data();
+                  return CommentScreen(
+                    text: commentData["CommentText"],
+                    user: commentData["CommentText"],
+                    time: formDate(commentData["CommentTime"]),
+                  );
+                }).toList(),
+              );
+            },
           )
         ],
       ),

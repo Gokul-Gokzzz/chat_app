@@ -1,3 +1,4 @@
+import 'package:auth/helper/helper.dart';
 import 'package:auth/view/profile_page.dart';
 import 'package:auth/view/wall_post.dart';
 import 'package:auth/widgets/drawer.dart';
@@ -49,10 +50,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[300],
-        appBar: AppBar(
-          backgroundColor: Colors.grey[900],
-        ),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(),
         drawer: MyDrawer(
           onProfileTap: goToProfilePage,
           onSignOut: signUserOut,
@@ -75,6 +74,7 @@ class _HomePageState extends State<HomePage> {
                       return WallPost(
                         message: post['Message'],
                         user: post['UserEmail'],
+                        time: formDate(post["TimeStamp"]),
                         postId: post.id,
                         likes: List<String>.from(
                           post['Likes'] ?? [],
