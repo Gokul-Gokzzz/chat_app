@@ -1,150 +1,100 @@
+// ignore_for_file: use_build_context_synchronously
+import 'package:auth/controller/profile_provider.dart';
 import 'package:auth/widgets/text_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
-
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  final currentUser = FirebaseAuth.instance.currentUser!;
-
-  final userCollection = FirebaseFirestore.instance.collection("Users");
-
-  Future<void> editField(String field) async {
-    String newValue = '';
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: Text(
-          "Edit" + field,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        content: TextField(
-          autofocus: true,
-          style: TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: "Enter New $field",
-            helperStyle: TextStyle(color: Colors.grey),
-          ),
-          onChanged: (value) {
-            newValue = value;
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(newValue),
-            child: Text(
-              'Save',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (newValue.trim().length > 0) {
-      await userCollection.doc(currentUser.email).update({field: newValue});
-    }
-  }
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
-          title: const Text('Profile Page'),
+      appBar: AppBar(
+        title: Text(
+          'Profile',
+          style: TextStyle(color: Colors.black),
         ),
-        body: StreamBuilder(
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+      body: Consumer<ProfileProvider>(
+        builder: (context, value, child) => StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection("Users")
-              .doc(currentUser.email)
+              .collection('Users')
+              .doc(value.currentUser.email)
               .snapshots(),
           builder: (context, snapshot) {
+            //get the user data
             if (snapshot.hasData) {
               final userData = snapshot.data!.data() as Map<String, dynamic>;
               return ListView(
                 children: [
-                  const SizedBox(
-                    height: 50,
+                  //profile pic
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: CircleAvatar(
+                      backgroundColor: const Color.fromARGB(255, 226, 220, 220),
+                      radius: 50,
+                      child: Image.asset(
+                        'assets/user.png',
+                        height: 50,
+                      ),
+                    ),
                   ),
-                  const Icon(
-                    Icons.person,
-                    size: 72,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  SizedBox(height: 10),
+                  //user email
                   Text(
-                    currentUser.email!,
+                    value.currentUser.email!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  //user details
+                  Text(
+                    'My details',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  //username
+                  MyTextBox(
+                    text: userData['username'],
+                    sectionName: 'Username',
+                    onPressed: () => value.editFields(
+                        'username', context), // changed to lowercase
+                  ),
+                  //bio
+                  SizedBox(height: 20),
+                  MyTextBox(
+                    text: userData['bio'],
+                    sectionName: ' Bio',
+                    onPressed: () => value.editFields(
+                        'bio', context), // changed to lowercase
+                  ),
+                  //user posts
+                  SizedBox(height: 20),
+                  Text(
+                    'My post',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.grey[700],
+                      fontWeight: FontWeight.bold,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25),
-                    child: Text(
-                      'My Details',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ),
-                  MyTextBox(
-                    text: userData['username'].toString(),
-                    sectionName: 'user name',
-                    onPressed: () => editField('Username'),
-                  ),
-                  MyTextBox(
-                    text: userData['bio'].toString(),
-                    sectionName: 'bio',
-                    onPressed: () => editField('bio'),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25),
-                    child: Text(
-                      'my posts',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ),
+                  )
                 ],
               );
             } else if (snapshot.hasError) {
+              return Center(child: Text('Error:${snapshot.error}'));
+            } else {
               return Center(
-                child: Text('Error${snapshot.error}'),
+                child: CircularProgressIndicator(),
               );
             }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
           },
-        ));
+        ),
+      ),
+    );
   }
 }

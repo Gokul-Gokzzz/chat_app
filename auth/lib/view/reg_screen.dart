@@ -1,205 +1,88 @@
-import 'dart:developer';
-
-import 'package:auth/service/google_sign_in.dart';
+// ignore_for_file: use_build_context_synchronously
+import 'package:auth/controller/reg_provider.dart';
 import 'package:auth/widgets/button.dart';
-import 'package:auth/widgets/square_button.dart';
 import 'package:auth/widgets/text_field.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends StatelessWidget {
   final Function()? onTap;
-  const RegisterScreen({super.key, required this.onTap});
-
-  @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends State<RegisterScreen> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-
-  void signUserUp() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-    if (passwordController.text != confirmPasswordController.text) {
-      Navigator.pop(context);
-      showErrorMessage('Password does ot match');
-      return;
-    }
-
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-
-      FirebaseFirestore.instance
-          .collection("Users")
-          .doc(userCredential.user!.email)
-          .set({
-        'username': emailController.text.split('@'[0]),
-        'bio': 'Empty bio...'
-      });
-
-      if (context.mounted) Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      log(e.message.toString());
-      showErrorMessage(e.code);
-    }
-  }
-
-  void showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.purple,
-          title: Center(
-            child: Text(
-              message,
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  const RegisterScreen({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       body: SafeArea(
+          child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
           child: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 50,
-              ),
-              Icon(
-                Icons.lock,
-                size: 100,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Text(
-                "Let\'s create an accunt for you",
-                style: TextStyle(color: Colors.grey[700], fontSize: 16),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              MyTextField(
-                controller: emailController,
-                hintText: 'Email',
-                obscureText: false,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              MyTextField(
-                controller: confirmPasswordController,
-                hintText: 'Confirm Password',
-                obscureText: true,
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              MyButton(
-                text: 'Sign Up',
-                onTap: signUserUp,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 25,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'Or continue with ',
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
+            child: Consumer<RegisterProvider>(
+              builder: (context, value, child) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SquareButton(
-                      onTap: () => AuthService().signInWithGoogle(),
-                      imagePath: 'assets/google.png')
-                ],
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                  SizedBox(height: 40),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 50,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset('assets/verify.png'),
+                    ),
+                  ),
+                  SizedBox(height: 40),
                   Text(
-                    'Already have an account',
-                    style: TextStyle(color: Colors.grey),
+                    'Create an account',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    width: 4,
+                  SizedBox(height: 20),
+                  MyTextField(
+                    controller: value.emailController,
+                    hintText: 'Enter the email',
+                    obscureText: false,
                   ),
-                  GestureDetector(
-                    onTap: widget.onTap,
-                    child: Text(
-                      'Login Now',
-                      style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
-                    ),
+                  SizedBox(height: 20),
+                  MyTextField(
+                      controller: value.passwordController,
+                      hintText: 'Enter the password here',
+                      obscureText: true),
+                  SizedBox(height: 20),
+                  MyTextField(
+                      controller: value.confirmPassController,
+                      hintText: 'Enter the confirm password here',
+                      obscureText: true),
+                  SizedBox(height: 20),
+                  MyButton(
+                    text: 'Sign Up',
+                    onTap: () => value.signUp(context),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'already have an account? ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          onTap;
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
         ),
       )),
