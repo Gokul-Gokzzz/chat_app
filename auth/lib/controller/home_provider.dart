@@ -1,3 +1,5 @@
+import 'package:auth/model/post_model.dart';
+import 'package:auth/service/post_service.dart';
 import 'package:auth/view/profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class HomeProvider extends ChangeNotifier {
   final currentUser = FirebaseAuth.instance.currentUser!;
+  final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController textController = TextEditingController();
   //sign out
   void signOut() {
@@ -27,6 +30,9 @@ class HomeProvider extends ChangeNotifier {
     }
     textController.clear();
   }
+
+  Stream<List<UserPostModel>> get userPostModel =>
+      _firestoreService.streamUserPosts();
 
   void goToProfilePage(context) {
     Navigator.pop(context);

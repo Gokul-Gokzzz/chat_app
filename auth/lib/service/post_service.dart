@@ -1,23 +1,45 @@
 import 'package:auth/model/post_model.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class PostService {
+class FirestoreService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  Future<void> toggleLike(Post post) async {
-    final isLiked = post.likes.contains(currentUser.email);
+  // Post a message
+  Future<void> postMessage(String userEmail, String message) async {
+    await _firestore.collection('User posts').add({
+      'UserEmail': userEmail,
+      'Message': message,
+      'Timestamb': Timestamp.now(),
+      'Likes': [],
+    });
+  }
 
+  // Stream of user posts
+  Stream<List<UserPostModel>> streamUserPosts() {
+    return _firestore
+        .collection('User posts')
+        .orderBy('Timestamb', descending: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => UserPostModel.fromFirestore(doc))
+          .toList();
+    });
+  }
+
+  Future<void> toggleLike(String postId, bool isLiked) async {
     DocumentReference postRef =
-        FirebaseFirestore.instance.collection('User posts').doc(post.postId);
-
+        FirebaseFirestore.instance.collection('User posts').doc(postId);
     if (isLiked) {
       await postRef.update({
-        'Likes': FieldValue.arrayRemove([currentUser.email])
+        'Likes': FieldValue.arrayUnion([currentUser.email])
       });
     } else {
       await postRef.update({
-        'Likes': FieldValue.arrayUnion([currentUser.email])
+        'Likes': FieldValue.arrayRemove([currentUser.email]),
       });
     }
   }
@@ -30,23 +52,33 @@ class PostService {
         .add({
       'CommentText': commentText,
       'CommentedBy': currentUser.email,
-      'CommentTime': Timestamp.now(),
+      'CommentTime': Timestamp.now()
     });
   }
 
-  Stream<List<Post>> getPostsStream() {
-    return FirebaseFirestore.instance
+  Future<int> fetchCommentCount(String postId) async {
+    final snapshot = await _firestore
         .collection('User posts')
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-              final data = doc.data();
-              return Post(
-                postId: doc.id,
-                message: data['message'],
-                user: data['user'],
-                likes: List<String>.from(data['likes'] ?? []),
-                time: data['time'],
-              );
-            }).toList());
+        .doc(postId)
+        .collection('Comments')
+        .get();
+    return snapshot.docs.length;
+  }
+
+  Future<void> deletePost(String postId) async {
+    //delete comment
+    final commentDocs = await FirebaseFirestore.instance
+        .collection('User posts')
+        .doc(postId)
+        .collection('Comments')
+        .get();
+    for (var doc in commentDocs.docs) {
+      await doc.reference.delete();
+    }
+    //delete post
+    await FirebaseFirestore.instance
+        .collection('User posts')
+        .doc(postId)
+        .delete();
   }
 }

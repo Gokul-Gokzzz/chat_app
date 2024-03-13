@@ -48,7 +48,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
                     codeAutoRetrievalTimeout: (String verificationId) {},
                     phoneNumber: phoneController.text.toString());
               },
-              child: const Text('Verify phone number'))
+              child: const Text(
+                'Verify phone number',
+                style: TextStyle(color: Colors.grey),
+              ))
         ],
       ),
     );

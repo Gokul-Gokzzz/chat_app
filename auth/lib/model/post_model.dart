@@ -1,35 +1,33 @@
-class Post {
-  final String postId;
-  final String message;
-  final String user;
-  final List<String> likes;
-  final String time;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  Post({
-    required this.postId,
+class UserPostModel {
+  final String id;
+  final String userEmail;
+  final String message;
+  final List<String> likes;
+
+  UserPostModel({
+    required this.id,
+    required this.userEmail,
     required this.message,
-    required this.user,
     required this.likes,
-    required this.time,
   });
 
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      postId: json['postId'],
-      message: json['message'],
-      user: json['user'],
-      likes: List<String>.from(json['likes'] ?? []),
-      time: json['time'],
+  factory UserPostModel.fromFirestore(DocumentSnapshot doc) {
+    Map data = doc.data() as Map;
+    return UserPostModel(
+      id: doc.id,
+      userEmail: data['UserEmail'] ?? '',
+      message: data['Message'] ?? '',
+      likes: List.from(data['Likes'] ?? []),
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
-      'postId': postId,
-      'message': message,
-      'user': user,
-      'likes': likes,
-      'time': time,
+      'id': id,
+      'UserEmail': userEmail,
+      'Message': message,
+      'Likes': likes
     };
   }
 }

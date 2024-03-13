@@ -49,7 +49,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomeSccreen()));
+                            builder: (context) => const HomeScreen()));
                   });
                 } catch (ex) {
                   log(ex.toString());
@@ -58,7 +58,10 @@ class _OtpScreenState extends State<OtpScreen> {
                 log('otp is empty');
               }
             },
-            child: const Text('otp'),
+            child: const Text(
+              'otp',
+              style: TextStyle(color: Colors.grey),
+            ),
           )
         ],
       ),

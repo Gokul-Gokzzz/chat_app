@@ -3,6 +3,7 @@ import 'package:auth/controller/profile_provider.dart';
 import 'package:auth/widgets/text_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -38,9 +39,9 @@ class ProfileScreen extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: const Color.fromARGB(255, 226, 220, 220),
                       radius: 50,
-                      child: Image.asset(
-                        'assets/user.png',
-                        height: 50,
+                      child: Lottie.asset(
+                        'assets/profile.json',
+                        height: 90,
                       ),
                     ),
                   ),

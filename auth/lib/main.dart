@@ -1,3 +1,4 @@
+import 'package:auth/controller/bottom_bar_provider.dart';
 import 'package:auth/controller/home_provider.dart';
 import 'package:auth/controller/login_provider.dart';
 import 'package:auth/controller/post_provider.dart';
@@ -5,6 +6,7 @@ import 'package:auth/controller/profile_provider.dart';
 import 'package:auth/controller/reg_provider.dart';
 import 'package:auth/firebase_options.dart';
 import 'package:auth/view/auth_screen.dart';
+import 'package:auth/view/bottom_bar.dart';
 import 'package:auth/widgets/themes/dark_theme.dart';
 import 'package:auth/widgets/themes/light_theme.dart';
 
@@ -30,12 +32,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => RegisterProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
+        ChangeNotifierProvider(create: (context) => BottomBarProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
         home: const AuthPage(),
+        // BottomBar()
       ),
     );
   }
