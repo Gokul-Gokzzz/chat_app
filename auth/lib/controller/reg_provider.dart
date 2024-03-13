@@ -10,7 +10,7 @@ class RegisterProvider extends ChangeNotifier {
   void signUp(context) async {
     showDialog(
       context: context,
-      builder: (context) => Center(child: CircularProgressIndicator()),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
     //make sure password match
     if (passwordController.text != confirmPassController.text) {

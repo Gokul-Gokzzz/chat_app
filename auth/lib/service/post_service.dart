@@ -39,7 +39,7 @@ class PostService {
         .collection('User posts')
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
-              final data = doc.data() as Map<String, dynamic>;
+              final data = doc.data();
               return Post(
                 postId: doc.id,
                 message: data['message'],

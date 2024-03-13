@@ -1,6 +1,5 @@
 import 'package:auth/widgets/my_list_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -23,7 +22,7 @@ class MyDrawer extends StatelessWidget {
         children: [
           Column(
             children: [
-              DrawerHeader(
+              const DrawerHeader(
                 child: Icon(
                   Icons.person,
                   color: Colors.white,
@@ -50,6 +49,7 @@ class MyDrawer extends StatelessWidget {
               onTap: () async {
                 await GoogleSignIn().signOut();
                 FirebaseAuth.instance.signOut();
+
                 onSignOut;
               },
             ),

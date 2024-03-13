@@ -31,7 +31,7 @@ class HomeProvider extends ChangeNotifier {
   void goToProfilePage(context) {
     Navigator.pop(context);
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+        .push(MaterialPageRoute(builder: (context) => const ProfileScreen()));
     notifyListeners();
   }
 }

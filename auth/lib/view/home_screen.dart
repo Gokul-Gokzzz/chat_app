@@ -15,12 +15,12 @@ class HomeSccreen extends StatelessWidget {
     final provider = Provider.of<HomeProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Home',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -64,12 +64,12 @@ class HomeSccreen extends StatelessWidget {
                       );
                     }
                   }
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 },
               )),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Row(
                 children: [
                   Expanded(
@@ -81,15 +81,15 @@ class HomeSccreen extends StatelessWidget {
                   ),
                   IconButton(
                       onPressed: value.postMessage,
-                      icon: Icon(Icons.arrow_circle_up)),
+                      icon: const Icon(Icons.arrow_circle_up)),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 'Logged in as : ${value.currentUser.email!}',
-                style: TextStyle(
+                style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 42, 154, 46)),
+                    color: Color.fromARGB(255, 42, 154, 46)),
               ),
             ],
           ),

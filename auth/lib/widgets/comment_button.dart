@@ -11,7 +11,7 @@ class CommentButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Icon(
+      child: const Icon(
         Icons.comment,
         color: Colors.grey,
       ),

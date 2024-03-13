@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class MyTextBox extends StatelessWidget {
   final String text;
@@ -22,7 +21,7 @@ class MyTextBox extends StatelessWidget {
         left: 15,
         bottom: 15,
       ),
-      margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+      margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

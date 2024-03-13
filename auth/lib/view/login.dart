@@ -1,7 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:auth/controller/login_provider.dart';
+import 'package:auth/view/phone_auth.dart';
 import 'package:auth/view/reg_screen.dart';
 import 'package:auth/widgets/button.dart';
+import 'package:auth/widgets/square_button.dart';
 import 'package:auth/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,41 +23,32 @@ class LoginScreen extends StatelessWidget {
               builder: (context, value, child) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 40),
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 50,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/security.png'),
-                    ),
-                  ),
-                  SizedBox(height: 40),
-                  Text(
+                  const SizedBox(height: 40),
+                  const Text(
                     'Welcome back to the login screen',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   MyTextField(
                     controller: value.emailController,
                     hintText: 'Enter the email',
                     obscureText: false,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   MyTextField(
                       controller: value.passwordlController,
                       hintText: 'Enter the password here',
                       obscureText: true),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   MyButton(
                     text: 'Sign In',
                     onTap: () => value.signIn(context),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Don\'t have account? ',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
@@ -65,9 +57,9 @@ class LoginScreen extends StatelessWidget {
                         onTap: () {
                           onTap;
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => RegisterScreen()));
+                              builder: (context) => const RegisterScreen()));
                         },
-                        child: Text(
+                        child: const Text(
                           'Register now',
                           style: TextStyle(
                               color: Colors.blue,
@@ -77,55 +69,58 @@ class LoginScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Row(
                     children: [
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           color: Colors.grey,
                           height: 1,
                         ),
                       ),
-                      Text(
+                      const Text(
                         "Or connect with",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           color: Colors.grey,
                           height: 1,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: Image.asset('assets/code.png'),
-                      ),
-                      SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: Image.asset('assets/google.png'),
-                      ),
-                      SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: InkWell(
+                  const SizedBox(height: 30),
+                  Consumer<LoginProvider>(
+                    builder: (context, value, child) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SquareButton(
+                          imagePath: 'assets/google.json',
+                          onTap: () => value.signInWithGoogle(),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        SquareButton(
+                            imagePath: 'assets/github.json',
+                            onTap: value.signInWithGithub),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        SquareButton(
+                            imagePath: 'assets/phone.json',
                             onTap: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) => OtpStartingScreen()));
-                            },
-                            child: Image.asset('assets/mobile-phone.png')),
-                      )
-                    ],
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const PhoneAuth()));
+                            })
+                      ],
+                    ),
                   ),
                 ],
               ),

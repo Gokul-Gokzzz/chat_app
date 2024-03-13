@@ -17,14 +17,14 @@ class ProfileProvider extends ChangeNotifier {
         backgroundColor: Colors.grey[900],
         title: Text(
           'Edit $fields',
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         content: TextField(
           autofocus: true,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: 'Enter new $fields',
-            hintStyle: TextStyle(color: Colors.grey),
+            hintStyle: const TextStyle(color: Colors.grey),
           ),
           onChanged: (value) {
             newValue = value;
@@ -33,7 +33,7 @@ class ProfileProvider extends ChangeNotifier {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
+            child: const Text(
               'Cancel',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -49,7 +49,7 @@ class ProfileProvider extends ChangeNotifier {
                 notifyListeners();
               }
             },
-            child: Text(
+            child: const Text(
               'Save',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),

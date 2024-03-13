@@ -12,13 +12,13 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Profile',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Consumer<ProfileProvider>(
         builder: (context, value, child) => StreamBuilder(
@@ -44,21 +44,21 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   //user email
                   Text(
                     value.currentUser.email!,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   //user details
-                  Text(
+                  const Text(
                     'My details',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   //username
                   MyTextBox(
                     text: userData['username'],
@@ -67,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
                         'username', context), // changed to lowercase
                   ),
                   //bio
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   MyTextBox(
                     text: userData['bio'],
                     sectionName: ' Bio',
@@ -75,8 +75,8 @@ class ProfileScreen extends StatelessWidget {
                         'bio', context), // changed to lowercase
                   ),
                   //user posts
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'My post',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -88,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error:${snapshot.error}'));
             } else {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }

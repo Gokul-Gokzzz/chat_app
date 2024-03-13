@@ -62,10 +62,10 @@ class PostProvider extends ChangeNotifier {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add comment'),
+        title: const Text('Add comment'),
         content: TextField(
           controller: commentTextController,
-          decoration: InputDecoration(hintText: 'Write a comment..'),
+          decoration: const InputDecoration(hintText: 'Write a comment..'),
         ),
         actions: [
           TextButton(
@@ -73,7 +73,7 @@ class PostProvider extends ChangeNotifier {
                 Navigator.pop(context);
                 commentTextController.clear();
               },
-              child: Text(
+              child: const Text(
                 'Cancel',
                 style: TextStyle(fontWeight: FontWeight.bold),
               )),
@@ -84,7 +84,7 @@ class PostProvider extends ChangeNotifier {
               Navigator.pop(context);
               notifyListeners();
             },
-            child: Text(
+            child: const Text(
               'Post',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),

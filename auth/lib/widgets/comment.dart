@@ -18,32 +18,28 @@ class CommentScreen extends StatelessWidget {
         color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(4),
       ),
-      margin: EdgeInsets.only(bottom: 5),
-      padding: EdgeInsets.all(15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(text),
-          SizedBox(
-            height: 5,
-          ),
-          Row(
-            children: [
-              Text(
-                user,
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-              Text(
-                " . ",
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-              Text(
-                time,
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-            ],
-          )
-        ],
+      margin: const EdgeInsets.only(bottom: 5),
+      // padding: EdgeInsets.all(15),
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 5),
+            Text(text),
+            Text(
+              user,
+              style: TextStyle(color: Colors.grey[400]),
+            ),
+            Text(
+              " . ",
+              style: TextStyle(color: Colors.grey[400]),
+            ),
+            Text(
+              time,
+              style: TextStyle(color: Colors.grey[400]),
+            )
+          ],
+        ),
       ),
     );
   }

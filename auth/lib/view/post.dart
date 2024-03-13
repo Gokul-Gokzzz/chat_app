@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:auth/widgets/comment.dart';
 import 'package:auth/widgets/comment_button.dart';
 import 'package:auth/widgets/delete_buttom.dart';
@@ -188,39 +190,23 @@ class _UserPostState extends State<UserPost> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 30,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.asset(
-                    'assets/user.png',
-                    fit: BoxFit.cover,
-                    height: 60,
-                  ),
-                ),
-              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          widget.user,
-                          style: TextStyle(
-                              color: Colors.grey.shade700,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          widget.time,
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
+                    Text(
+                      widget.user,
+                      style: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
                     ),
+                    Text(
+                      widget.time,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 10),
                     Text(
                       widget.message,
                       style: const TextStyle(
