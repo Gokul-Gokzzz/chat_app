@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:auth/service/post_service.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +19,8 @@ class PostProvider extends ChangeNotifier {
   }
 
   Future<void> fetchCommentCount(String postId) async {
-    print("Fetching comment count for post ID: $postId");
     commentCount = await _postService.fetchCommentCount(postId);
-    print("Fetched comment count: $commentCount");
+
     notifyListeners();
   }
 

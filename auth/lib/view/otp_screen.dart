@@ -4,16 +4,12 @@ import 'package:auth/view/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class OtpScreen extends StatefulWidget {
+class OtpScreen extends StatelessWidget {
   final String verificationId;
-  const OtpScreen({super.key, required this.verificationId});
+  OtpScreen({super.key, required this.verificationId});
 
-  @override
-  State<OtpScreen> createState() => _OtpScreenState();
-}
-
-class _OtpScreenState extends State<OtpScreen> {
   final otpController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +37,7 @@ class _OtpScreenState extends State<OtpScreen> {
               if (otpController.text.isNotEmpty) {
                 try {
                   PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                      verificationId: widget.verificationId,
+                      verificationId: verificationId,
                       smsCode: otpController.text.toString());
                   FirebaseAuth.instance
                       .signInWithCredential(credential)

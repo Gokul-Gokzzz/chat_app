@@ -8,10 +8,10 @@ void showCommentDialog(BuildContext context, String postId) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text('Add comment'),
+      title: const Text('Add comment'),
       content: TextField(
         controller: provider.commentTextController,
-        decoration: InputDecoration(hintText: 'Write a comment..'),
+        decoration: const InputDecoration(hintText: 'Write a comment..'),
       ),
       actions: [
         TextButton(
@@ -19,7 +19,7 @@ void showCommentDialog(BuildContext context, String postId) {
               Navigator.pop(context);
               provider.commentTextController.clear();
             },
-            child: Text(
+            child: const Text(
               'Cancel',
               style: TextStyle(fontWeight: FontWeight.bold),
             )),
@@ -29,7 +29,7 @@ void showCommentDialog(BuildContext context, String postId) {
             provider.commentTextController.clear();
             Navigator.pop(context);
           },
-          child: Text(
+          child: const Text(
             'Post',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),

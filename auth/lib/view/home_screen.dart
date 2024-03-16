@@ -21,7 +21,6 @@ class HomeScreen extends StatelessWidget {
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
         elevation: 0,
       ),
       drawer: Consumer<HomeProvider>(
@@ -50,7 +49,6 @@ class HomeScreen extends StatelessWidget {
                               message: post.message,
                               user: post.userEmail,
                               postId: post.id,
-                              // time: formatDate(post.timestamp as Timestamp),
                               likes: post.likes,
                             );
                           },
@@ -79,12 +77,12 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              Text(
-                'Logged in as : ${value.currentUser.email!}',
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 42, 154, 46)),
-              ),
+              // Text(
+              //   'Logged in as : ${value.currentUser.email! }',
+              //   style: const TextStyle(
+              //       fontWeight: FontWeight.bold,
+              //       color: Color.fromARGB(255, 42, 154, 46)),
+              // ),
             ],
           ),
         ),

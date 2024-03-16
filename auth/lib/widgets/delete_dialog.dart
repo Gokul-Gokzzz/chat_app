@@ -1,4 +1,5 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -7,17 +8,36 @@ void deleteDialogue(BuildContext context, String postId) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text('Delete Post'),
-      content: Text('Are you sure to delete this post?'),
+      backgroundColor: Colors.grey,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      title: const Text(
+        'Delete Post',
+        style: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      content: const Text(
+        'Are you sure you want to delete this post?',
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('Cancel'),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
         ),
         TextButton(
           onPressed: () async {
             //delete the comment from fire store first
-            //(if you only delete the post, the comments will still be the stored in firestore)
             final commentDocs = await FirebaseFirestore.instance
                 .collection('User posts')
                 .doc(postId) // Use the passed postId here
@@ -26,7 +46,7 @@ void deleteDialogue(BuildContext context, String postId) {
             for (var doc in commentDocs.docs) {
               await FirebaseFirestore.instance
                   .collection('User posts')
-                  .doc(postId) // Use the passed postId here
+                  .doc(postId)
                   .collection('Comments')
                   .doc(doc.id)
                   .delete();
@@ -34,7 +54,7 @@ void deleteDialogue(BuildContext context, String postId) {
             //then delete the post
             FirebaseFirestore.instance
                 .collection('User posts')
-                .doc(postId) // Use the passed postId here
+                .doc(postId)
                 .delete()
                 .then((value) => print('Delete the post'))
                 .catchError((error) => print('failed to delete post'));
@@ -42,7 +62,12 @@ void deleteDialogue(BuildContext context, String postId) {
             //dismiss the dialog box
             Navigator.pop(context);
           },
-          child: Text('Delete'),
+          child: const Text(
+            'Delete',
+            style: TextStyle(
+              color: Colors.red,
+            ),
+          ),
         )
       ],
     ),

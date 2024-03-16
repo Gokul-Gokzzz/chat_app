@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:auth/controller/profile_provider.dart';
 import 'package:auth/widgets/text_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

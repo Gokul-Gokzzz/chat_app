@@ -137,7 +137,6 @@ class _UserPostState extends State<UserPost> {
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
                 const SizedBox(width: 20),
-                // if (widget.user == currentUser.email)
                 DeleteButton(
                     onTap: () => deleteDialogue(context, widget.postId)),
               ],
