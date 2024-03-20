@@ -1,34 +1,50 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-
+// my_text_field.dart
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
-  final controller;
+  final TextEditingController controller;
   final String hintText;
-  final bool obscureText;
-  const MyTextField(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      required this.obscureText});
+  final bool? obscureText;
+
+  final Widget? suffixIcon;
+
+  const MyTextField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    this.obscureText,
+    this.suffixIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: TextField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/image 3.avif'), fit: BoxFit.cover)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: TextFormField(
+          controller: controller,
+          obscureText: obscureText ?? false,
+          decoration: InputDecoration(
+            suffixIcon: suffixIcon,
             enabledBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: Theme.of(context).colorScheme.secondary)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey.shade400)),
+              borderSide: BorderSide(
+                color: Colors.grey.shade400,
+              ),
+            ),
             fillColor: Theme.of(context).colorScheme.primary,
             filled: true,
             hintText: hintText,
-            helperStyle: TextStyle(color: Colors.grey[500])),
+            helperStyle: TextStyle(color: Colors.grey[500]),
+          ),
+        ),
       ),
     );
   }

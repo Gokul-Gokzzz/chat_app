@@ -15,6 +15,16 @@ class HomeScreen extends StatelessWidget {
     final provider = Provider.of<HomeProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+            // decoration: BoxDecoration(
+            //     gradient: LinearGradient(
+            //         begin: Alignment.topLeft,
+            //         end: Alignment.bottomRight,
+            //         colors: [
+            //       Color.fromARGB(255, 212, 178, 191),
+            //       Color.fromARGB(255, 116, 39, 69),
+            //     ])),
+            ),
         title: const Text(
           'Home',
           style: TextStyle(color: Colors.black),
@@ -29,61 +39,66 @@ class HomeScreen extends StatelessWidget {
           onSignOut: provider.signOut,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Consumer<HomeProvider>(
-          builder: (context, value, child) => Column(
-            children: [
-              Expanded(
-                child: StreamBuilder(
-                    stream: Provider.of<HomeProvider>(context, listen: false)
-                        .userPostModel,
-                    builder:
-                        (context, AsyncSnapshot<List<UserPostModel>> snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView.builder(
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            final post = snapshot.data![index];
-                            return UserPost(
-                              message: post.message,
-                              user: post.userEmail,
-                              postId: post.id,
-                              likes: post.likes,
-                            );
-                          },
+      body: Container(
+        // decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //         image: AssetImage('assets/image1.jfif'), fit: BoxFit.cover)),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Consumer<HomeProvider>(
+            builder: (context, value, child) => Column(
+              children: [
+                Expanded(
+                  child: StreamBuilder(
+                      stream: Provider.of<HomeProvider>(context, listen: false)
+                          .userPostModel,
+                      builder: (context,
+                          AsyncSnapshot<List<UserPostModel>> snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              final post = snapshot.data![index];
+                              return UserPost(
+                                message: post.message,
+                                user: post.userEmail,
+                                postId: post.id,
+                                likes: post.likes,
+                              );
+                            },
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error ${snapshot.error}'));
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error ${snapshot.error}'));
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                children: [
-                  Expanded(
-                    child: MyTextField(
-                      controller: value.textController,
-                      hintText: 'Write something here',
-                      obscureText: false,
+                      }),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  children: [
+                    Expanded(
+                      child: MyTextField(
+                        controller: value.textController,
+                        hintText: 'Write something here',
+                        obscureText: false,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                      onPressed: value.postMessage,
-                      icon: const Icon(Icons.arrow_circle_up)),
-                ],
-              ),
-              const SizedBox(height: 20),
-              // Text(
-              //   'Logged in as : ${value.currentUser.email! }',
-              //   style: const TextStyle(
-              //       fontWeight: FontWeight.bold,
-              //       color: Color.fromARGB(255, 42, 154, 46)),
-              // ),
-            ],
+                    IconButton(
+                        onPressed: value.postMessage,
+                        icon: const Icon(Icons.arrow_circle_up)),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Text(
+                //   'Logged in as : ${value.currentUser.email!}',
+                //   style: const TextStyle(
+                //       fontWeight: FontWeight.bold,
+                //       color: Color.fromARGB(255, 42, 154, 46)),
+                // ),
+              ],
+            ),
           ),
         ),
       ),

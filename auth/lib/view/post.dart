@@ -36,7 +36,7 @@ class UserPost extends StatefulWidget {
 class _UserPostState extends State<UserPost> {
   final currentUser = FirebaseAuth.instance.currentUser!;
 
-  // int commentCount = 0;
+  int commentCount = 0;
 
   @override
   void initState() {
@@ -52,6 +52,8 @@ class _UserPostState extends State<UserPost> {
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(
+        // image: DecorationImage(
+        //     image: AssetImage('assets/image 2.jpg'), fit: BoxFit.cover),
         color: const Color.fromARGB(255, 194, 209, 194),
         borderRadius: BorderRadius.circular(15),
       ),
@@ -137,8 +139,9 @@ class _UserPostState extends State<UserPost> {
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
                 const SizedBox(width: 20),
-                DeleteButton(
-                    onTap: () => deleteDialogue(context, widget.postId)),
+                if (widget.user == currentUser.email)
+                  DeleteButton(
+                      onTap: () => deleteDialogue(context, widget.postId)),
               ],
             ),
           ),

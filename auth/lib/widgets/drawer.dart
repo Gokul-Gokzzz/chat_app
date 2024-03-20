@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class MyDrawer extends StatelessWidget {
   final void Function()? onProfileTap;
+
   final void Function()? onSignOut;
   const MyDrawer({
     super.key,
@@ -39,6 +40,16 @@ class MyDrawer extends StatelessWidget {
                 text: 'P R O F I L',
                 onTap: onProfileTap,
               ),
+              // MyListTile(
+              //   icon: Icons.settings,
+              //   text: 'S E T T I N  G S',
+              //   onTap: () {
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const SettingsPage()));
+              //   },
+              // ),
             ],
           ),
           Padding(

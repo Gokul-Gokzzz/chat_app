@@ -1,4 +1,3 @@
-import 'package:auth/controller/bottom_bar_provider.dart';
 import 'package:auth/controller/home_provider.dart';
 import 'package:auth/controller/login_provider.dart';
 import 'package:auth/controller/post_provider.dart';
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => RegisterProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
-        ChangeNotifierProvider(create: (context) => BottomBarProvider()),
+        // ChangeNotifierProvider(create: (context) => BottomBarProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
