@@ -5,6 +5,7 @@ class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool? obscureText;
+  final String? Function(dynamic value)? validator;
 
   final Widget? suffixIcon;
 
@@ -14,12 +15,13 @@ class MyTextField extends StatelessWidget {
     required this.hintText,
     this.obscureText,
     this.suffixIcon,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/image 3.avif'), fit: BoxFit.cover)),
       child: Padding(
@@ -44,6 +46,7 @@ class MyTextField extends StatelessWidget {
             hintText: hintText,
             helperStyle: TextStyle(color: Colors.grey[500]),
           ),
+          validator: validator,
         ),
       ),
     );

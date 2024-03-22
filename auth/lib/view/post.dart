@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
 import 'package:auth/controller/post_provider.dart';
 import 'package:auth/widgets/comment.dart';
 import 'package:auth/widgets/comment_button.dart';

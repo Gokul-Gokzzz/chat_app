@@ -4,7 +4,8 @@ import 'package:auth/controller/post_provider.dart';
 import 'package:auth/controller/profile_provider.dart';
 import 'package:auth/controller/reg_provider.dart';
 import 'package:auth/firebase_options.dart';
-import 'package:auth/view/auth_screen.dart';
+
+import 'package:auth/view/splash.dart';
 import 'package:auth/widgets/themes/dark_theme.dart';
 import 'package:auth/widgets/themes/light_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
-        home: const AuthPage(),
+        home: const SplascScreen(),
       ),
     );
   }

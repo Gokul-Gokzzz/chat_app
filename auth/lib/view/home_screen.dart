@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:auth/controller/home_provider.dart';
 import 'package:auth/model/post_model.dart';
 import 'package:auth/view/post.dart';
@@ -15,16 +17,6 @@ class HomeScreen extends StatelessWidget {
     final provider = Provider.of<HomeProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: Container(
-            // decoration: BoxDecoration(
-            //     gradient: LinearGradient(
-            //         begin: Alignment.topLeft,
-            //         end: Alignment.bottomRight,
-            //         colors: [
-            //       Color.fromARGB(255, 212, 178, 191),
-            //       Color.fromARGB(255, 116, 39, 69),
-            //     ])),
-            ),
         title: const Text(
           'Home',
           style: TextStyle(color: Colors.black),
@@ -40,9 +32,6 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        // decoration: BoxDecoration(
-        //     image: DecorationImage(
-        //         image: AssetImage('assets/image1.jfif'), fit: BoxFit.cover)),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Consumer<HomeProvider>(
