@@ -6,8 +6,8 @@ import 'package:auth/controller/reg_provider.dart';
 import 'package:auth/firebase_options.dart';
 
 import 'package:auth/view/splash.dart';
-import 'package:auth/widgets/themes/dark_theme.dart';
-import 'package:auth/widgets/themes/light_theme.dart';
+// import 'package:auth/widgets/themes/dark_theme.dart';
+// import 'package:auth/widgets/themes/light_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,13 +30,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => RegisterProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
-        // ChangeNotifierProvider(create: (context) => BottomBarProvider()),
+        // ChangeNotifierProvider(create: (context) => SearchProvider()),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        home: const SplascScreen(),
+        // theme: lightTheme,
+        // darkTheme: darkTheme,
+        home: SplascScreen(),
       ),
     );
   }

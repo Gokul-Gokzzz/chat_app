@@ -1,3 +1,4 @@
+import 'package:auth/view/search_seen.dart';
 import 'package:auth/widgets/my_list_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -40,16 +41,16 @@ class MyDrawer extends StatelessWidget {
                 text: 'P R O F I L',
                 onTap: onProfileTap,
               ),
-              // MyListTile(
-              //   icon: Icons.settings,
-              //   text: 'S E T T I N  G S',
-              //   onTap: () {
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) => const SettingsPage()));
-              //   },
-              // ),
+              MyListTile(
+                icon: Icons.settings,
+                text: 'S E A R C H',
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchScreen()));
+                },
+              ),
             ],
           ),
           Padding(

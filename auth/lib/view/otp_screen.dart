@@ -55,7 +55,7 @@ class OtpScreen extends StatelessWidget {
               }
             },
             child: const Text(
-              'otp',
+              'Verify Otp',
               style: TextStyle(color: Colors.grey),
             ),
           )

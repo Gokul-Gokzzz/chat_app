@@ -15,7 +15,7 @@ class CommentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
+        color: Colors.grey[200],
         borderRadius: BorderRadius.circular(4),
       ),
       margin: const EdgeInsets.only(bottom: 5),

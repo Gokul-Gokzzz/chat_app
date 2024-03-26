@@ -1,26 +1,40 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-// class LoginService {
-//   Future<void> signInWithEmailAndPassword(String email, String password) async {
-//     await FirebaseAuth.instance
-//         .signInWithEmailAndPassword(email: email, password: password);
-//   }
+class AuthenticationService {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-//   Future<UserCredential> signInWithGithub() async {
-//     GithubAuthProvider githubAuthProvider = GithubAuthProvider();
-//     return await FirebaseAuth.instance.signInWithProvider(githubAuthProvider);
-//   }
+  Future<UserCredential> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      return await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException {
+      rethrow;
+    }
+  }
 
-//   Future<void> signInWithGoogle() async {
-//     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+  Future<UserCredential> signInWithGithub(context) async {
+    try {
+      GithubAuthProvider githubAuthProvider = GithubAuthProvider();
+      return await _firebaseAuth.signInWithProvider(githubAuthProvider);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-//     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
 
-//     final credential = GoogleAuthProvider.credential(
-//       accessToken: gAuth.accessToken,
-//       idToken: gAuth.idToken,
-//     );
-//     await FirebaseAuth.instance.signInWithCredential(credential);
-//   }
-// }
+      final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
+      return await _firebaseAuth.signInWithCredential(credential);
+    } catch (e) {
+      rethrow;
+    }
+  }
+}

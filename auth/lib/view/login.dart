@@ -47,14 +47,14 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     MyTextField(
-                      controller: value.passwordlController,
+                      controller: value.passwordController,
                       hintText: 'Enter the password here',
                       obscureText: true,
                     ),
                     const SizedBox(height: 20),
                     MyButton(
                       text: 'Sign In',
-                      onTap: () => value.signIn(context),
+                      onTap: () => value.signInWithEmailAndPassword(context),
                     ),
                     const SizedBox(height: 20),
                     Row(
@@ -112,14 +112,14 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           SquareButton(
                             imagePath: 'assets/google.json',
-                            onTap: () => value.signInWithGoogle(),
+                            onTap: () => value.signInWithGoogle(context),
                           ),
                           const SizedBox(
                             width: 5,
                           ),
                           SquareButton(
                               imagePath: 'assets/github.json',
-                              onTap: value.signInWithGithub),
+                              onTap: () => value.signInWithGithub(context)),
                           const SizedBox(
                             width: 5,
                           ),

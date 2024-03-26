@@ -9,6 +9,7 @@ class HomeProvider extends ChangeNotifier {
   final currentUser = FirebaseAuth.instance.currentUser!;
   final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController textController = TextEditingController();
+  String searchQuery = '';
   //sign out
   void signOut() {
     FirebaseAuth.instance.signOut();
