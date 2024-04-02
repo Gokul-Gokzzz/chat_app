@@ -1,24 +1,41 @@
+import 'package:auth/controller/post_provider.dart';
+import 'package:auth/view/post/post.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:auth/model/post_model.dart';
+import 'package:provider/provider.dart';
 
-class Bookmarks extends StatelessWidget {
-  final List<UserPostModel> bookmarkedPosts;
-
-  const Bookmarks({super.key, required this.bookmarkedPosts});
-
+class FavoritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bookmarked Posts'),
+        title: Text('Favorite Posts'),
       ),
-      body: ListView.builder(
-        itemCount: bookmarkedPosts.length,
-        itemBuilder: (context, index) {
-          final post = bookmarkedPosts[index];
-          return ListTile(
-            title: Text(post.message),
-            subtitle: Text(post.userEmail),
+      body: Consumer<PostProvider>(
+        builder: (context, postProvider, _) {
+          final currentUser = FirebaseAuth.instance.currentUser;
+          if (currentUser == null) {
+            return Center(child: Text('User not logged in.'));
+          }
+          final user = currentUser.email ?? currentUser.phoneNumber;
+
+          final wishlitItems = postProvider.allPost
+              .where((post) => post.wishlist.contains(user))
+              .toList();
+
+          return ListView.builder(
+            itemCount: wishlitItems.length,
+            itemBuilder: (context, index) {
+              final post = wishlitItems[index];
+              return UserPost(
+                message: post.message,
+                user: post.userEmail,
+                postId: post.id,
+                likes: post.likes,
+                postTime: post.postTime,
+                save: post,
+              );
+            },
           );
         },
       ),

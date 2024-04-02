@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                                 postId: post.id,
                                 likes: post.likes,
                                 postTime: post.postTime,
-                                isBookmarked: post.isBookmarked,
+                                save: post,
                               );
                             },
                           );
@@ -82,12 +82,12 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                Text(
-                  'Logged in as : ${value.currentUser.email!}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 42, 154, 46)),
-                ),
+                // Text(
+                //   'Logged in as : ${value.currentUser.email!}',
+                //   style: const TextStyle(
+                //       fontWeight: FontWeight.bold,
+                //       color: Color.fromARGB(255, 42, 154, 46)),
+                // ),
               ],
             ),
           ),

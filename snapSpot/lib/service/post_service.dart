@@ -1,25 +1,27 @@
+import 'dart:developer';
+
 import 'package:auth/model/post_model.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class FirestoreService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class PostService {
+  String bookMarks = 'User posts';
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final currentUser = FirebaseAuth.instance.currentUser!;
-
-  // Post a message
-  Future<void> postMessage(String userEmail, String message) async {
-    await _firestore.collection('User posts').add({
-      'UserEmail': userEmail,
-      'Message': message,
-      'Timestamb': Timestamp.now(),
-      'Likes': [],
+  late CollectionReference<UserPostModel> bookmark;
+  PostService() {
+    bookmark = firestore.collection(bookMarks).withConverter<UserPostModel>(
+        fromFirestore: (snapshot, options) {
+      return UserPostModel.fromFirestore(snapshot);
+    }, toFirestore: (value, options) {
+      return value.toJson();
     });
   }
 
   // Stream of user posts
   Stream<List<UserPostModel>> fetchUserPosts() {
-    return _firestore
+    return firestore
         .collection('User posts')
         .orderBy('Timestamb', descending: false)
         .snapshots()
@@ -35,11 +37,13 @@ class FirestoreService {
         FirebaseFirestore.instance.collection('User posts').doc(postId);
     if (isLiked) {
       await postRef.update({
-        'Likes': FieldValue.arrayUnion([currentUser.email])
+        'Likes':
+            FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.email])
       });
     } else {
       await postRef.update({
-        'Likes': FieldValue.arrayRemove([currentUser.email]),
+        'Likes':
+            FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.email]),
       });
     }
   }
@@ -57,7 +61,7 @@ class FirestoreService {
   }
 
   Future<int> fetchCommentCount(String postId) async {
-    final snapshot = await _firestore
+    final snapshot = await firestore
         .collection('User posts')
         .doc(postId)
         .collection('Comments')
@@ -80,5 +84,34 @@ class FirestoreService {
         .collection('User posts')
         .doc(postId)
         .delete();
+  }
+
+  Future<void> wishlistClicked(String id, bool status) async {
+    try {
+      if (status == true) {
+        await FirebaseFirestore.instance
+            .collection('User posts')
+            .doc(id)
+            .update({
+          'wishlist': FieldValue.arrayUnion(
+              [currentUser.email ?? currentUser.phoneNumber])
+        });
+      } else {
+        await FirebaseFirestore.instance
+            .collection('User posts')
+            .doc(id)
+            .update({
+          'wishlist': FieldValue.arrayRemove(
+              [currentUser.email ?? currentUser.phoneNumber])
+        });
+      }
+    } catch (e) {
+      log('got a error :$e');
+    }
+  }
+
+  Future<List<UserPostModel>> getAllPost() async {
+    final snapshot = await bookmark.get();
+    return snapshot.docs.map((doc) => doc.data()).toList();
   }
 }

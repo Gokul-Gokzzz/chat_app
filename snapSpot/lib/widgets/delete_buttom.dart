@@ -13,7 +13,7 @@ class DeleteButton extends StatelessWidget {
       onTap: onTap,
       child: const Icon(
         Icons.cancel,
-        color: Colors.grey,
+        color: Colors.white,
       ),
     );
   }

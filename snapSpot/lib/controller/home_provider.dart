@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class HomeProvider extends ChangeNotifier {
   final currentUser = FirebaseAuth.instance.currentUser!;
-  final FirestoreService _firestoreService = FirestoreService();
+  final PostService _firestoreService = PostService();
   final TextEditingController textController = TextEditingController();
   String searchQuery = '';
   //sign out
@@ -26,6 +26,7 @@ class HomeProvider extends ChangeNotifier {
         'Message': textController.text,
         'Timestamb': Timestamp.now(),
         'Likes': [],
+        'wishlist': [],
       });
       notifyListeners();
     }

@@ -1,42 +1,39 @@
+import 'package:auth/model/post_model.dart';
 import 'package:auth/widgets/comment.dart';
-import 'package:auth/widgets/comment_button.dart';
-import 'package:auth/widgets/comment_dialog.dart';
 import 'package:auth/widgets/delete_buttom.dart';
-import 'package:auth/widgets/delete_dialog.dart';
-import 'package:auth/widgets/like_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:auth/controller/post_provider.dart';
+import 'package:auth/widgets/comment_button.dart';
+import 'package:auth/widgets/comment_dialog.dart';
+import 'package:auth/widgets/delete_dialog.dart';
+import 'package:auth/widgets/like_button.dart';
 
-class UserPost extends StatefulWidget {
+class UserPost extends StatelessWidget {
   final String message;
   final String user;
   final String postId;
   final List<String> likes;
   final Timestamp postTime;
-  final bool isBookmarked;
+  final UserPostModel save;
 
-  const UserPost({
+  UserPost({
     Key? key,
     required this.message,
     required this.user,
     required this.postId,
     required this.likes,
     required this.postTime,
-    required this.isBookmarked,
+    required this.save,
   }) : super(key: key);
 
-  @override
-  State<UserPost> createState() => _UserPostState();
-}
-
-class _UserPostState extends State<UserPost> {
   final currentUser = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
+    // final scaffoldKey = GlobalKey<ScaffoldState>();
     return Container(
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -56,35 +53,41 @@ class _UserPostState extends State<UserPost> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.user,
+                      user,
                       style: const TextStyle(
-                          // color: Colors.grey.shade700,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          widget.message,
+                          message,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            final postProvider = Provider.of<PostProvider>(
-                                context,
-                                listen: false);
-                            postProvider.toggleBookmark(
-                                widget.postId, !widget.isBookmarked);
-                          },
-                          icon: Icon(
-                            widget.isBookmarked
-                                ? Icons.bookmark
-                                : Icons.bookmark_border,
-                            color: widget.isBookmarked ? Colors.blue : null,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                        )
+                        ),
+                        Consumer<PostProvider>(
+                            builder: (context, value, child) => IconButton(
+                                onPressed: () {
+                                  final wish = value.wishlistCheck(save);
+                                  value.wishlistClicked(save.id, wish);
+                                  print('object');
+                                  // scaffoldKey.currentState?.showSnakbar(
+                                  //     SnackBar(
+                                  //         content: Text(
+                                  //           wish
+                                  //             ? 'Added to bookmark'
+                                  //             : 'Removed from bookmark')));
+                                },
+                                icon: value.wishlistCheck(save)
+                                    ? Icon(
+                                        Icons.bookmark_outline,
+                                        color: Colors.blue,
+                                      )
+                                    : Icon(Icons.bookmark)))
                       ],
                     ),
                   ],
@@ -92,11 +95,12 @@ class _UserPostState extends State<UserPost> {
               ),
             ],
           ),
+          //comment box
           const SizedBox(height: 10),
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('User posts')
-                .doc(widget.postId)
+                .doc(postId)
                 .collection('Comments')
                 .orderBy('CommentTime', descending: true)
                 .snapshots(),
@@ -121,6 +125,7 @@ class _UserPostState extends State<UserPost> {
               );
             },
           ),
+          // like, comment, delete icon and count
           const SizedBox(height: 20),
           Consumer<PostProvider>(
             builder: (context, value, child) => Row(
@@ -128,24 +133,25 @@ class _UserPostState extends State<UserPost> {
               children: [
                 LikeButton(
                   isLiked: value.isLiked,
-                  onTap: () => value.toggleLike(widget.postId, value.isLiked),
+                  onTap: () => value.toggleLike(postId, value.isLiked),
                 ),
                 Text(
-                  '${widget.likes.length} likes',
-                  style: TextStyle(color: Colors.grey.shade600),
+                  '${likes.length} likes',
+                  style: TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(width: 30),
                 CommentButton(
-                  onTap: () => showCommentDialog(context, widget.postId),
+                  onTap: () => showCommentDialog(context, postId),
                 ),
                 Text(
                   '${value.commentCount} comments',
-                  style: TextStyle(color: Colors.grey.shade600),
+                  style: TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(width: 20),
-                if (widget.user == currentUser.email)
+                if (user == currentUser.email)
                   DeleteButton(
-                      onTap: () => deleteDialogue(context, widget.postId)),
+                    onTap: () => deleteDialogue(context, postId),
+                  ),
               ],
             ),
           ),

@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
+  final Function()? onTap;
   final TextEditingController controller;
   final String hintText;
 
@@ -19,6 +20,7 @@ class MyTextField extends StatelessWidget {
     this.obscureText,
     this.suffixIcon,
     this.validator,
+    this.onTap,
   });
 
   @override

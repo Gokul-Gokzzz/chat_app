@@ -63,16 +63,14 @@ class ProfileScreen extends StatelessWidget {
                   MyTextBox(
                     text: userData['username'],
                     sectionName: 'Username',
-                    onPressed: () => value.editFields(
-                        'username', context), // changed to lowercase
+                    onPressed: () => value.editFields('username', context),
                   ),
                   //bio
                   const SizedBox(height: 20),
                   MyTextBox(
                     text: userData['bio'],
                     sectionName: ' Bio',
-                    onPressed: () => value.editFields(
-                        'bio', context), // changed to lowercase
+                    onPressed: () => value.editFields('bio', context),
                   ),
                   //user posts
                   const SizedBox(height: 20),

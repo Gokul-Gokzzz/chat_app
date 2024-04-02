@@ -40,12 +40,14 @@ class MyDrawer extends StatelessWidget {
                 text: 'P R O F I L E',
                 onTap: onProfileTap,
               ),
-
-              //  MyListTile(
-              //   icon: Icons.person,
-              //   text: 'B O O K M A R K',
-              //   onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>Bookmarks(bookmarkedPosts: bookmarkedPosts)))},
-              // ),
+              MyListTile(
+                icon: Icons.person,
+                text: 'B O O K M A R K',
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => FavoritePage()));
+                },
+              ),
             ],
           ),
           Padding(

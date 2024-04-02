@@ -15,7 +15,7 @@ void deleteDialogue(BuildContext context, String postId) {
       title: const Text(
         'Delete Post',
         style: TextStyle(
-          color: Colors.red,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),

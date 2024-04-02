@@ -1,14 +1,20 @@
+import 'package:auth/model/post_model.dart';
 import 'package:auth/service/post_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PostProvider extends ChangeNotifier {
   final TextEditingController commentTextController = TextEditingController();
-  final FirestoreService _postService = FirestoreService();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final PostService postService = PostService();
+  List<UserPostModel> allPost = [];
+
+  final currentUser = FirebaseAuth.instance.currentUser;
+
   bool isLiked = false;
   int commentCount = 0;
+  bool isFavorite = false;
 
   String formatDate(Timestamp timestamp) {
     DateTime now = DateTime.now();
@@ -31,36 +37,51 @@ class PostProvider extends ChangeNotifier {
     }
   }
 
-  void toggleLike(String postId, bool isCurrentlyLiked) async {
-    await _postService.toggleLike(postId, !isCurrentlyLiked);
+  void toggleLike(String postId, bool isLiked) async {
+    await postService.toggleLike(postId, isLiked);
+    // isLiked = !isCurrentlyLiked;
     notifyListeners();
   }
 
   Future<void> addComment(String postId, String commentText) async {
-    await _postService.addComment(postId, commentText);
+    await postService.addComment(postId, commentText);
     await fetchCommentCount(postId);
     notifyListeners();
   }
 
   Future<void> fetchCommentCount(String postId) async {
-    commentCount = await _postService.fetchCommentCount(postId);
+    commentCount = await postService.fetchCommentCount(postId);
 
     notifyListeners();
   }
 
   Future<void> deletePost(String postId) async {
-    await _postService.deletePost(postId);
+    await postService.deletePost(postId);
     notifyListeners();
   }
 
-  Future<void> toggleBookmark(String postId, bool isBookmarked) async {
-    try {
-      await _firestore.collection('User posts').doc(postId).update({
-        'IsBookmarked': isBookmarked,
-      });
-    } catch (e) {
-      print('Error toggling bookmark: $e');
+  Future<void> wishlistClicked(String id, bool status) async {
+    await postService.wishlistClicked(id, status);
+    notifyListeners();
+  }
+
+  bool wishlistCheck(UserPostModel save) {
+    if (currentUser != null) {
+      final user = currentUser!.email ?? currentUser!.phoneNumber;
+      if (save.wishlist.contains(user)) {
+        getAllPost();
+        return false;
+      } else {
+        getAllPost();
+        return true;
+      }
+    } else {
+      return true;
     }
+  }
+
+  getAllPost() async {
+    allPost = await postService.getAllPost();
     notifyListeners();
   }
 }

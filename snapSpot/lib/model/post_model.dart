@@ -6,7 +6,7 @@ class UserPostModel {
   final String message;
   final List<String> likes;
   final Timestamp postTime;
-  bool isBookmarked;
+  List wishlist;
 
   UserPostModel({
     required this.id,
@@ -14,7 +14,7 @@ class UserPostModel {
     required this.message,
     required this.likes,
     required this.postTime,
-    required this.isBookmarked,
+    required this.wishlist,
   });
 
   factory UserPostModel.fromFirestore(DocumentSnapshot doc) {
@@ -25,7 +25,7 @@ class UserPostModel {
       message: data['Message'] ?? '',
       likes: List.from(data['Likes'] ?? []),
       postTime: data['Timestamb'] ?? Timestamp.now(),
-      isBookmarked: data['IsBookmarked'] ?? false,
+      wishlist: List<String>.from(data['wishlist'] ?? []),
     );
   }
 
@@ -36,6 +36,7 @@ class UserPostModel {
       'Message': message,
       'Likes': likes,
       'Timestamb': postTime,
+      'wishlist': wishlist,
     };
   }
 }
